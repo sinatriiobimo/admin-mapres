@@ -1,0 +1,30 @@
+<div class="tab-pane fade show active" id="edit-news" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="card shadow mb-4 mb-2">
+        <div class="card-body">
+            <form action="/admin/news/<%= news.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Kategori Berita</label>
+                    <select class="form-control" name="scoopId">
+                        <option value="<%= news.scoopId._id %>"><%= news.scoopId.name %></option>
+                        <% for(i = 0; i < scoop.length; i++) { %>
+                            <option value="<%= scoop[i].id %>"><%= scoop[i].name %></option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Headline</label>
+                    <input type="text" class="form-control" name="headline" value="<%= news.headline %>" placeholder="Enter Headline Berita" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Image Berita</label>
+                    <input type="file" class="form-control" name="image">
+                </div>
+                <div class="form-group">
+                    <label for="name">Deskripsi Berita</label>
+                    <textarea class="form-control" name="about" required><%= news.about %></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+</div>

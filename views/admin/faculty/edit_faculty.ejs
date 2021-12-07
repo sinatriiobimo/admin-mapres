@@ -1,0 +1,25 @@
+<div class="tab-pane fade show active" id="edit-faculty" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="card shadow mb-4 mb-2">
+        <div class="card-body">
+            <form action="/admin/faculty/<%= faculty.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Nama Fakultas</label>
+                    <input type="text" class="form-control" name="faculty" value="<%= faculty.faculty %>" placeholder="Enter Nama Fakultas" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Singkatan</label>
+                    <input type="text" class="form-control" name="stands" value="<%= faculty.stands %>" placeholder="Enter Singkatan" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Image Fakultas</label>
+                    <input type="file" class="form-control" name="image" multiple>
+                </div>
+                <div class="form-group">
+                    <label for="name">Tentang Fakultas</label>
+                    <textarea class="form-control" name="about" required><%= faculty.about %></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+</div>

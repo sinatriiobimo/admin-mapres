@@ -1,0 +1,72 @@
+scoop: {
+    name: string
+}
+
+news: {
+    scoopId: [{_id: ObjectId}],
+    headline: string,
+    image: string,
+    isPopular: boolean,
+    description: string
+}
+
+faculty: {
+    code: string,
+    faculty: string,
+    stands: string,
+    imageHero: string,
+    imageIllustration: string,
+    about: string
+    achieveId: [{_id: ObjectId}],
+    majorId: [{_id: ObjectId}],
+    mapresId: [{_id: ObjectId}]
+}
+
+achieve: {
+    facultyId: [{_Id: ObjectId}],
+    studQty: number,
+    medalsQty: number,
+    patenQty: number
+}
+
+major: {
+    name: string,
+    academic: number,
+    nonAcademic: number
+}
+
+mapres: {
+    tips: string,
+    studentId: string,
+    studAchieve: string
+}
+
+student: {
+    nama: string,
+    npm: string,
+    facultyId: [{_id: ObjectId}],
+    majorId: [{_id: ObjectId}],
+    email: string,
+    noTelp: string,
+    imageStud: string,
+    yearStart: string,
+    prestasiId: [{_id: ObjectId}]
+}
+
+prestasi: {
+    studentId: [{_id: ObjectId}],
+    event: string,
+    kepersertaan: enum([tim, individu]),
+    kategori: enum([internasional, nasional, wilayah, provinsi]),
+    teamName: string,
+    creation: string,   
+    isInter: boolean,
+    countryQty: string,
+    uniQty: string,
+    peringkat: enum([juara 1, juara 2, juara 3, harapan 1, harapan 2, harapan 3, favorit, finalist]),
+    startDate: date,
+    endDate: date,
+    certificate: string,
+    document: string,
+    newsId: [{_id: ObjectId}]
+}

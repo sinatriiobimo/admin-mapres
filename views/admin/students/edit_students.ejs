@@ -1,0 +1,51 @@
+<div class="tab-pane fade show active" id="edit-students" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="card shadow mb-4 mb-2">
+        <div class="card-body">
+            <form action="/admin/students/<%= students.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Nama Mahasiswa</label>
+                    <input type="text" class="form-control" value="<%= students.name %>" name="name" placeholder="Enter Nama Mahasiswa" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Nomor Pokok Mahasiswa</label>
+                    <input type="text" class="form-control" name="npm" value="<%= students.npm %>" placeholder="Enter Nomor Pokok Mahasiswa" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Fakultas</label>
+                    <select class="form-control" name="facultyId">
+                        <option value="<%= students.facultyId._id %>"><%= students.facultyId.faculty %></option>
+                        <% for(i = 0; i < faculty.length; i++) { %>
+                            <option value="<%= faculty[i].id %>"><%= faculty[i].faculty %></option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Jurusan</label>
+                    <select class="form-control" name="majorId">
+                        <option value="<%= students.majorId._id %>"><%= students.majorId.name %></option>
+                        <% for(i = 0; i < major.length; i++) { %>
+                            <option value="<%= major[i].id %>"><%= major[i].name %></option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Email</label>
+                    <input type="email" class="form-control" value="<%= students.email %>" name="email" placeholder="Enter Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">No. Telephone</label>
+                    <input type="text" class="form-control" value="<%= students.noTelp %>" name="noTelp" placeholder="Enter No. Telephone" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Tahun Masuk</label>
+                    <input type="text" class="form-control" value="<%= students.yearStart %>" name="yearStart" id="datepicker3" placeholder="Enter Tahun Masuk" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Image</label>
+                    <input type="file" class="form-control" name="image">
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
