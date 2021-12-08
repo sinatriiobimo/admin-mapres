@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const adminController = require('../controllers/adminController');
-const { uploadMultiple, uploadSingle } = require('../middlewares/multer');
+const { uploadMultiple, uploadSingle, uploadDocument } = require('../middlewares/multer');
 
 router.get('/dashboard', adminController.viewDashboard);
 
@@ -14,6 +14,11 @@ router.delete('/students/:id/delete', adminController.deleteStudents);
 
 // endpoint achievements
 router.get('/achievements', adminController.viewAchievements);
+router.post('/achievements', uploadDocument, adminController.addAchievements);
+// router.post('/getStudents', adminController.getStudents);
+// router.put('/achievements/:id', uploadSingle, adminController.editAchievements);
+// router.get('/achievements/:id', adminController.showEditAchievements);
+// router.delete('/achievements/:id/delete', adminController.deleteAchievements);
 
 // endpoint faculty
 router.get('/faculty', adminController.viewFaculty);

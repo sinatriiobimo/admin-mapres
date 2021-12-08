@@ -10,8 +10,6 @@
             <tr>
               <th>Nama</th>
               <th>NPM</th>
-              <th>Fakultas</th>
-              <th>Jurusan</th>
               <th>Kepersertaan</th>
               <th>Event</th>
               <th>Peringkat</th>
@@ -21,10 +19,32 @@
               <th>Jumlah Universitas</th>
               <th>Tanggal Awal</th>
               <th>Tanggal Akhir</th>
-              <th>Document</th>
               <th>Action</th>
             </tr>
           </thead>
+          <tbody>
+            <% for(let i = 0; i < prestasi.length; i++) { %>
+              <tr>
+                <td><%= prestasi[i].studentId.name %></td>
+                <td><%= prestasi[i].studentId.npm %></td>
+                <td><%= prestasi[i].kepesertaan %></td>
+                <td><%= prestasi[i].event %></td>
+                <td><%= prestasi[i].peringkat %></td>
+                <td><%= prestasi[i].category %></td>
+                <td><%= prestasi[i].creation %></td>
+                <td><%= prestasi[i].countryQty %></td>
+                <td><%= prestasi[i].uniQty %></td>
+                <td><%= prestasi[i].startDate.toLocaleString('default', { month: 'long' }) %> <%= prestasi[i].startDate.getUTCFullYear() %> </td>
+                <td><%= prestasi[i].endDate.toLocaleString('default', { month: 'long' }) %> <%= prestasi[i].endDate.getUTCFullYear() %> </td>
+                <td>
+                  <form action="/admin/achievements/<%= prestasi[i].id %>/delete?_method=DELETE" method="POST">
+                    <a href="/admin/achievements/<%= prestasi[i].id %>" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i></a>
+                    <button type="submit" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></button>
+                </form>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
         </table>
       </div>
     </div>

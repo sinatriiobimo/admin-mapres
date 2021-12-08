@@ -8,6 +8,13 @@ const storage = multer.diskStorage({
   }
 });
 
+const storageDocs = multer.diskStorage({
+  destination: "public/docs",
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
 const storageMultiple = multer.diskStorage({
   destination: function (req, file, cb) {
     var dir = 'public/images';
@@ -29,9 +36,9 @@ const uploadSingle = multer({
 }).single("image");
 
 const uploadDocument = multer({
-  storage: storage,
+  storage: storageDocs,
   fileFilter: function (req, file, cb) {
-    checkFileType(file, cb);
+    checkDocsType(file, cb);
   }
 }).single("document");
 
@@ -52,6 +59,18 @@ function checkFileType(file, cb) {
     return cb(null, true);
   } else {
     cb("Error: Images Only !!!");
+  }
+}
+
+function checkDocsType(file, cb) {
+  const fileTypes = /pdf|doc|docx/;
+  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimeType = fileTypes.test(file.mimetype);
+
+  if (mimeType && extName) {
+    return cb(null, true);
+  } else {
+    cb("Error: PDF or Docs Only !!!");
   }
 }
 

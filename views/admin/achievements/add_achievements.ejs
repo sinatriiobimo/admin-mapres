@@ -4,7 +4,12 @@
             <form action="/admin/achievements" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="name">Nama Mahasiswa</label>
-                    <input type="search" class="form-control" name="name" placeholder="Enter Nama Mahasiswa" required>
+                    <select class="form-control" name="studentId">
+                        <option value="" disabled selected>Nama Mahasiswa</option>
+                        <% for(i = 0; i < student.length; i++) { %>
+                            <option value="<%= student[i].id %>"><%= student[i].name %></option>
+                        <% } %>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="name">Nama Event</label>
@@ -31,7 +36,7 @@
                 <div class="form-group">
                     <label for="name">Peringkat</label>
                     <select id="peringkat" class="form-control" name="peringkat">
-                            <option value="" disabled selected>Kategori/Skala</option>
+                            <option value="" disabled selected>Peringkat</option>
                             <option value="Juara 1">Juara 1</option>
                             <option value="Juara 2">Juara 2</option>
                             <option value="Juara 3">Juara 3</option>
@@ -48,11 +53,11 @@
                 </div>
                 <div class="form-group">
                     <label for="name">Jumlah Negara</label>
-                    <input type="number" class="form-control" name="countryQty" placeholder="Enter Jumlah Negara" required>
+                    <input type="number" min="1" class="form-control" name="countryQty" placeholder="Enter Jumlah Negara" required>
                 </div>
                 <div class="form-group">
                     <label for="name">Jumlah Universitas</label>
-                    <input type="number" class="form-control" name="uniQty" placeholder="Enter Jumlah Universitas" required>
+                    <input type="number" min="1" class="form-control" name="uniQty" placeholder="Enter Jumlah Universitas" required>
                 </div>
                 <div class="form-group">
                     <label for="name">Tanggal Awal</label>
@@ -75,3 +80,35 @@
         </div>
     </div>
 </div>
+
+<script>
+    function sendData(e) {
+        const searchResults = document.getElementById('searchResults');
+        let match = e.value.match(/^[a-zA-Z ]*/);
+        let match2 = e.value.match(/\s*/);
+        if(match2[0] === e.value) {
+            searchResults.innerHTML = '';
+            return;
+        }
+        if(match[0] === e.value) {
+            fetch('getStudents', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({payload: e.value})
+            }).then(res => res.json()).then(data => {
+                let payload = data.payload;
+                searchResults.innerHTML = '';
+                if(payload.length < 1) {
+                    searchResults.innerHTML = '<p style="margin: 10px 0;">Mahasiswa Tidak Terdaftar</p>';
+                    return;
+                }
+                payload.forEach((student, index) => {
+                    if(index > 0) searchResults.innerHTML += '<hr>';
+                    searchResults.innerHTML += `<p id="studsName">${student.name}</p>`
+                });
+            });
+            return;
+        }
+        searchResults.innerHTML = '';
+    }
+</script>

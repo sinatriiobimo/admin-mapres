@@ -13,7 +13,7 @@
                  <div class="form-group">
                     <label for="name">Fakultas</label>
                     <select class="form-control" name="facultyId">
-                        <option value="">--Fakultas--</option>
+                        <option value="" disabled selected>Fakultas</option>
                         <% for(i = 0; i < faculty.length; i++) { %>
                             <option value="<%= faculty[i].id %>"><%= faculty[i].faculty %></option>
                         <% } %>
@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <label for="name">Jurusan</label>
                     <select class="form-control" name="majorId">
-                        <option value="">--Jurusan--</option>
+                        <option value="" disabled selected>Jurusan</option>
                         <% for(i = 0; i < major.length; i++) { %>
                             <option value="<%= major[i].id %>"><%= major[i].name %></option>
                         <% } %>

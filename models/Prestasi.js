@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const {ObjectId} = mongoose.Schema;
 
 const prestasiSchema = new mongoose.Schema({
-    studentId: [{
+    studentId: {
         type: ObjectId,
         ref: 'Student'
-    }],
+    },
     event: {
         type: String,
         required: true

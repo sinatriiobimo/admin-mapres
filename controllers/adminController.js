@@ -290,16 +290,14 @@ module.exports = {
     viewAchievements: async (req, res) => {
         try {
             const prestasi = await Prestasi.find()
-            .populate({path: 'facultyId', select: 'id faculty'})
-            .populate({path: 'majorId', select: 'id name'});
-            console.log(prestasi)
-            const students = await Student.find();
+            .populate({path: 'studentId', select: 'id name npm'})
+            const student = await Student.find();
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status: alertStatus};
             res.render('admin/achievements/view_achievements', {
                 title: "Mapres UG | Achievements",
-                students,
+                student,
                 alert,
                 prestasi,
                 action: 'view'
@@ -307,42 +305,51 @@ module.exports = {
         } catch (error) {
             req.flash('alertMessage', `${error.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/admin/students');   
+            res.redirect('/admin/achievements');   
         }
+    },
+    
+    getStudents: async (req, res) => {
+        let payload = req.body.payload.trim();
+        let search = await Student.find({name: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
+        search = search.slice(0, 10);
+        res.send({payload: search});
     },
     
     addAchievements: async (req, res) => {
         try {
             if(!req.file) {
-                req.flash('alertMessage', 'Image not found');
+                req.flash('alertMessage', 'Docs not found');
                 req.flash('alertStatus', 'danger');
-                res.redirect(`/admin/students`);
+                res.redirect(`/admin/achievements`);
             }
-            const {facultyId, majorId, name, npm, email, noTelp, yearStart} = req.body;
-            const faculty = await Faculty.findOne({_id: facultyId});
-            const major = await Major.findOne({_id: majorId});
-            const newStudents = {
-                facultyId: faculty._id,
-                majorId: major._id,
-                name,
-                npm,
-                email,
-                noTelp,
-                yearStart,
-                image: `images/${req.file.filename}`
+            const { studentId, event, kepesertaan, category, teamName, creation, countryQty, uniQty, peringkat, startDate, endDate, newsURL } = req.body;
+            const student = await Student.findOne({_id: studentId});
+            const newAchievements = {
+                studentId: student._id,
+                event,
+                kepesertaan,
+                category, 
+                teamName, 
+                creation, 
+                countryQty, 
+                uniQty, 
+                peringkat, 
+                startDate, 
+                endDate, 
+                newsURL,
+                document: `images/${req.file.filename}`
             }
-            const students = await Student.create(newStudents);
-            faculty.studentId.push({_id: students._id});
-            major.studentId.push({_id: students._id});
-            await faculty.save();
-            await major.save();
-            req.flash('alertMessage', 'Success Add New News');
+            const achievements = await Prestasi.create(newAchievements);
+            student.prestasiId.push({_id: achievements._id});
+            await student.save();
+            req.flash('alertMessage', 'Success Add New Prestasi');
             req.flash('alertStatus', 'success');
-            res.redirect('/admin/students');
+            res.redirect('/admin/achievements');
         } catch (error) {
             req.flash('alertMessage', `${error.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/admin/students')    
+            res.redirect('/admin/achievements')    
         }
     },
     
