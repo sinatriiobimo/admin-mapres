@@ -8,8 +8,6 @@
               <th>Kode Jurusan</th>
               <th>Nama Jurusan</th>
               <th>Fakultas</th>
-              <th>Prestasi Akademik</th>
-              <th>Prestasi Non Akademik</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -19,8 +17,6 @@
                 <td><%= major[i].code %></td>
                 <td><%= major[i].name %></td>
                 <td><%= major[i].facultyId.faculty %></td>
-                <td><%= major[i].academic %></td>
-                <td><%= major[i].nonAcademic %></td>
                 <td>
                   <form action="/admin/major/<%= major[i].id %>/delete?_method=DELETE" method="POST">
                     <a href="/admin/major/<%= major[i].id %>" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i></a>

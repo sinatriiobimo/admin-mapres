@@ -32,8 +32,12 @@ const facultySchema = new mongoose.Schema({
     }],
     studentId: [{
         type: ObjectId,
-        ref: 'Students'
+        ref: 'Student'
     }],
+    prestasiId: [{
+        type: ObjectId,
+        ref: 'Prestasi'
+    }]
 });
 
 module.exports = mongoose.model('Faculty', facultySchema);

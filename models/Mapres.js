@@ -20,4 +20,4 @@ const mapresSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('mapres', mapresSchema);
+module.exports = mongoose.model('Mapres', mapresSchema);

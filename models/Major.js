@@ -14,17 +14,13 @@ const majorSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    academic: {
-        type: Number,
-        required: true
-    },
-    nonAcademic: {
-        type: Number,
-        required: true
-    },
+    prestasiId: [{
+        type: ObjectId,
+        ref: 'Prestasi'
+    }],
     studentId: [{
         type: ObjectId,
-        ref: 'Students'
+        ref: 'Student'
     }],
 });
 

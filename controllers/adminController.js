@@ -7,14 +7,72 @@ const Student = require('../models/Student');
 const Mapres = require('../models/Mapres');
 const Prestasi = require('../models/Prestasi');
 const Image = require('../models/Image');
+const Users = require('../models/Users');
 const fs = require('fs-extra');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
     viewDashboard: (req, res) => {
-        res.render('admin/dashboard/view_dashboard', {
-            title: "Mapres UG | Dashboard"
-        });
+        try {
+            res.render('admin/dashboard/view_dashboard', {
+                title: "Mapres UG | Dashboard",
+                user: req.session.user,
+            });
+        } catch (error) {
+            res.redirect('/admin/dashboard');
+        }
+    },
+    
+    viewSignin: async (req, res) => {
+        try {
+            const alertMessage = req.flash('alertMessage');
+            const alertStatus = req.flash('alertStatus');
+            const alert = {message: alertMessage, status: alertStatus};
+            if(req.session.user == null || req.session.user == undefined) {
+                res.render('index', {
+                    alert,
+                    title: 'Mapres | Signin'
+                });
+            } else {
+                res.redirect('/admin/dashboard');
+            }
+        } catch (error) {
+            res.redirect('/admin/signin');
+        }
+    },
+    
+    actionSignin: async (req, res) => {
+        try {
+            const {username, password} = req.body;
+            const user = await Users.findOne({username: username});
+            console.log(user);
+            if(!user) {
+                req.flash('alertMessage', "User can't be found");
+                req.flash('alertStatus', 'danger');
+                res.redirect('/admin/signin');
+            }
+            const isPasswordMatch = await bcrypt.compare(password, user.password);
+            if(!isPasswordMatch) {
+                req.flash('alertMessage', `Password invalid!`);
+                req.flash('alertStatus', 'danger');
+                res.redirect('/admin/signin');
+            }
+            
+            req.session.user = {
+                id: user.id,
+                username: user.username
+            }
+            
+            res.redirect('/admin/dashboard');
+        } catch (error) {
+            res.redirect('/admin/signin');
+        }
+    },
+    
+    actionLogout: async (req, res) => {
+        req.session.destroy();
+        res.redirect('/admin/signin');
     },
     
     // Mapres
@@ -32,7 +90,8 @@ module.exports = {
                 students,
                 alert,
                 mapres,
-                action: 'view'
+                action: 'view',
+                user: req.session.user,
             })
         } catch (error) {
             req.flash('alertMessage', `${error.message}`);
@@ -70,6 +129,13 @@ module.exports = {
         try {
             const {id} = req.params;
             const mapres = await Mapres.findOne({_id: id});
+            const faculty = await Faculty.findOne({_id: mapres.facultyId}).populate('mapresId');
+            for(let i = 0; i < faculty.mapresId.length; i++) {
+                if(faculty.mapresId[i]._id.toString() === mapres._id.toString()) {
+                    faculty.mapresId.pull({ _id: mapres._id });
+                    await faculty.save();
+                }
+            }
             await mapres.remove();
             req.flash('alertMessage', 'Success Delete Mapres');
             req.flash('alertStatus', 'success');
@@ -97,6 +163,7 @@ module.exports = {
                 alert,
                 mapres,
                 action: 'edit',
+                user: req.session.user,
             })
         } catch (error) {
             req.flash('alertMessage', `${error.message}`);
@@ -134,7 +201,7 @@ module.exports = {
             .populate({path: 'facultyId', select: 'id faculty'})
             .populate({path: 'majorId', select: 'id name'});
             const faculty = await Faculty.find();
-            const major = await Major.find();
+            const major = await Major.find().populate({path: 'facultyId', select: 'id name'});
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status: alertStatus};
@@ -144,7 +211,8 @@ module.exports = {
                 major,
                 alert,
                 students,
-                action: 'view'
+                action: 'view',
+                user: req.session.user,
             })
         } catch (error) {
             req.flash('alertMessage', `${error.message}`);
@@ -205,6 +273,7 @@ module.exports = {
                 major,
                 alert,
                 students,
+                user: req.session.user,
                 action: 'edit',
             })
         } catch (error) {
@@ -259,23 +328,23 @@ module.exports = {
     deleteStudents: async (req, res) => {
         try {
             const { id } = req.params;
-            const students = await Student.findOne({_id: id});
-            const faculty = await Faculty.findOne({_id: id}).populate('studentId');
-            const major = await Major.findOne({_id: id}).populate('studentId');
-            // for(let i = 0; i < faculty.studentId.length; i++) {
-            //     if(faculty.studentId[i]._id.toString() === students._id.toString()) {
-            //         faculty.studentId.pull({ _id: students._id });
-            //         await faculty.save();
-            //     }
-            // }
-            // for(let i = 0; i < major.studentId.length; i++) {
-            //     if(major.studentId[i]._id.toString() === students._id.toString()) {
-            //         major.studentId.pull({ _id: students._id });
-            //         await major.save();
-            //     }
-            // }
-            await fs.unlink(path.join(`public/${students.image}`));
-            await students.remove();
+            const student = await Student.findOne({_id: id});
+            const faculty = await Faculty.findOne({_id: student.facultyId}).populate('studentId');
+            const major = await Major.findOne({_id: student.majorId}).populate('studentId');
+            for(let i = 0; i < faculty.studentId.length; i++) {
+                if(faculty.studentId[i]._id.toString() === student._id.toString()) {
+                    faculty.studentId.pull({ _id: student._id });
+                    await faculty.save();
+                }
+            }
+            for(let i = 0; i < major.studentId.length; i++) {
+                if(major.studentId[i]._id.toString() === student._id.toString()) {
+                    major.studentId.pull({ _id: student._id });
+                    await major.save();
+                }
+            }
+            await fs.unlink(path.join(`public/${student.image}`));
+            await student.remove();
             req.flash('alertMessage', 'Success Delete Students');
             req.flash('alertStatus', 'success');
             res.redirect('/admin/students');
@@ -300,6 +369,7 @@ module.exports = {
                 student,
                 alert,
                 prestasi,
+                user: req.session.user,
                 action: 'view'
             })
         } catch (error) {
@@ -365,6 +435,7 @@ module.exports = {
                 title: "Mapres UG | Faculty",
                 alert,
                 faculty,
+                user: req.session.user,
                 action: 'view faculty',
             })
         } catch (error) {
@@ -412,6 +483,7 @@ module.exports = {
                 title: 'Mapres UG | Edit faculty',
                 alert,
                 faculty,
+                user: req.session.user,
                 action: 'edit faculty',
             })
         } catch (error) {
@@ -463,10 +535,10 @@ module.exports = {
             const {id} = req.params;
             const faculties = await Faculty.findOne({_id: id}).populate('imageId');
             for(let i = 0; i < faculties.imageId.length; i++) {
-                Image.findOne({_id: faculties.imageId[i]._id}).then((image) => {
-                    fs.unlink((path.join(`public/${image.image}`)));
-                    image.remove();
-                }).catch((err) => {
+                Image.findOne({_id: faculties.imageId[i]._id}).then((imageSelected) => {
+                    fs.unlink((path.join(`public/${imageSelected.image}`)));
+                    imageSelected.remove();
+                }).catch((error) => {
                     req.flash('alertMessage', `${error.message}`);
                     req.flash('alertStatus', 'danger');
                     res.redirect('/admin/faculty');  
@@ -496,6 +568,7 @@ module.exports = {
                 faculty,
                 alert,
                 major,
+                user: req.session.user,
                 action: 'view major'
             })
         } catch (error) {
@@ -507,14 +580,12 @@ module.exports = {
     
     addMajor: async (req, res) => {
         try {
-            const {facultyId, code, name, academic, nonAcademic} = req.body;
+            const {facultyId, code, name} = req.body;
             const faculty = await Faculty.findOne({_id: facultyId});
             const newMajor = {
                 facultyId: faculty._id,
                 code,
-                name,
-                academic,
-                nonAcademic,
+                name
             }
             const major = await Major.create(newMajor);
             faculty.majorId.push({_id: major._id});
@@ -543,6 +614,7 @@ module.exports = {
                 alert,
                 major,
                 faculty,
+                user: req.session.user,
                 action: 'edit major',
             })
         } catch (error) {
@@ -555,13 +627,10 @@ module.exports = {
     editMajor: async (req, res) => {
         try {
             const {id} = req.params;
-            const { facultyId, name, code, academic, nonAcademic } = req.body;
-            const major = await Major.findOne({_id: id})
-            .populate({path: 'facultyId', select: 'id faculty'});
+            const { facultyId, name, code } = req.body;
+            const major = await Major.findOne({_id: id}).populate({path: 'facultyId', select: 'id faculty'});
             major.name = name;
             major.code = code;
-            major.academic = academic;
-            major.nonAcademic = nonAcademic;
             major.facultyId = facultyId;
             await major.save();
             req.flash('alertMessage', 'Success Update Major');
@@ -577,7 +646,14 @@ module.exports = {
     deleteMajor: async (req, res) => {
         try {
             const { id } = req.params;
-            const major = await Major.findOne({_id: id}).populate('facultyId');
+            const major = await Major.findOne({_id: id});
+            const faculty = await Faculty.findOne({ _id: major.facultyId }).populate('majorId');
+            for(let i = 0; i < faculty.majorId.length; i++) {
+                if(faculty.majorId[i]._id.toString() === major._id.toString()) {
+                    faculty.majorId.pull({ _id: major._id });
+                    await faculty.save();
+                }
+            }
             await major.remove();
             req.flash('alertMessage', 'Success Delete Major');
             req.flash('alertStatus', 'success');
@@ -601,6 +677,7 @@ module.exports = {
                 faculty,
                 alert,
                 fachieve,
+                user: req.session.user,
                 action: 'view'
             })
         } catch (error) {
@@ -647,6 +724,7 @@ module.exports = {
                 faculty,
                 alert,
                 fachieve,
+                user: req.session.user,
                 action: 'edit',
             })
         } catch (error) {
@@ -681,6 +759,13 @@ module.exports = {
         try {
             const {id} = req.params;
             const fachieve = await Achieve.findOne({_id: id});
+            const faculty = await Faculty.findOne({ _id: fachieve.facultyId }).populate('achieveId');
+            for(let i = 0; i < faculty.achieveId.length; i++) {
+                if(faculty.achieveId[i]._id.toString() === fachieve._id.toString()) {
+                    faculty.achieveId.pull({ _id: fachieve._id });
+                    await faculty.save();
+                }
+            }
             await fachieve.remove();
             req.flash('alertMessage', 'Success Delete Info Achievements');
             req.flash('alertStatus', 'success');
@@ -705,6 +790,7 @@ module.exports = {
                 scoop,
                 alert,
                 news,
+                user: req.session.user,
                 action: 'view'
             })
         } catch (error) {
@@ -754,6 +840,7 @@ module.exports = {
                 title: "Mapres UG | Show Detail News",
                 alert,
                 news,
+                user: req.session.user,
                 action: 'show detail'
             })
         } catch (error) {
@@ -765,9 +852,9 @@ module.exports = {
     
     deleteNews: async (req, res) => {
         try {
-            const {id} = req.params;
+            const { id } = req.params;
             const news = await News.findOne({_id: id});
-            const scoop = await Scoop.findOne({_id: id}).populate('newsId');
+            const scoop = await Scoop.findOne({ _id: news.scoopId }).populate('newsId');
             for(let i = 0; i < scoop.newsId.length; i++) {
                 if(scoop.newsId[i]._id.toString() === news._id.toString()) {
                     scoop.newsId.pull({ _id: news._id });
@@ -791,7 +878,6 @@ module.exports = {
             const { id } = req.params;
             const news = await News.findOne({_id: id})
             .populate({path: 'scoopId', select: 'id name'});
-            console.log(news);
             const scoop = await Scoop.find();
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
@@ -801,6 +887,7 @@ module.exports = {
                 scoop,
                 alert,
                 news,
+                user: req.session.user,
                 action: 'edit',
             })
         } catch (error) {
@@ -854,6 +941,7 @@ module.exports = {
             res.render('admin/scoop/view_scoop', {
                 scoop, 
                 alert,
+                user: req.session.user,
                 title: "Mapres UG | Scoop"
             });
         } catch (error) {

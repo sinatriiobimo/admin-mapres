@@ -1,6 +1,12 @@
 const router = require('express').Router();
 const adminController = require('../controllers/adminController');
 const { uploadMultiple, uploadSingle, uploadDocument } = require('../middlewares/multer');
+const auth = require('../middlewares/auth');
+
+router.get('/signin', adminController.viewSignin);
+router.post('/signin', adminController.actionSignin);
+router.use(auth);
+router.get('/logout', adminController.actionLogout);
 
 router.get('/dashboard', adminController.viewDashboard);
 
@@ -10,7 +16,6 @@ router.post('/students', uploadSingle, adminController.addStudents);
 router.get('/students/:id', adminController.showEditStudents);
 router.put('/students/:id', uploadSingle, adminController.editStudents);
 router.delete('/students/:id/delete', adminController.deleteStudents);
-
 
 // endpoint achievements
 router.get('/achievements', adminController.viewAchievements);

@@ -22,15 +22,18 @@ const prestasiSchema = new mongoose.Schema({
         required: true,
         default: 'Nasional'
     },
+    type: {
+        type: String,
+        enum: ['Akademik', 'NonAkademik'],
+        required: true,
+        default: 'Nasional'
+    },
     teamName: {
         type: String
     },
     creation: {
         type: String,
         required: true
-    },
-    isInter: {
-        type: Boolean,
     },
     countryQty: {
         type: String,
@@ -59,6 +62,14 @@ const prestasiSchema = new mongoose.Schema({
     },
     newsURL: {
         type: String
+    },
+    majorId: {
+        type: ObjectId,
+        ref: 'Prestasi'
+    },
+    facultyId: {
+        type: ObjectId,
+        ref: 'Faculty'
     }
 });
 
