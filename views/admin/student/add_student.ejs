@@ -1,0 +1,57 @@
+<div class="tab-pane fade" id="add-student" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="card shadow mb-4 mb-2">
+        <div class="card-body">
+            <form action="/admin/student" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Nama Mahasiswa</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Nama Mahasiswa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">NPM Mahasiswa</label>
+                        <input type="text" class="form-control" id="name" name="npm" placeholder="Enter NPM Mahasiswa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Fakultas</label>
+                        <select class="form-control" name="facultyId">
+                            <option value="" disabled selected>Fakultas</option>
+                            <% for(i = 0; i < faculty.length; i++) { %>
+                                <option value="<%= faculty[i].id %>"><%= faculty[i].name %></option>
+                                <% } %>
+                            </select>                    
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Jurusan</label>
+                            <select class="form-control" name="majorId">
+                                <option value="" disabled selected>Jurusan</option>
+                                <% for(i = 0; i < major.length; i++) { %>
+                                    <option value="<%= major[i].id %>"><%= major[i].name %></option>
+                                    <% } %>
+                                </select>                    
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Email Mahasiswa</label>
+                                <input type="email" class="form-control" id="name" name="email" placeholder="Enter Email Mahasiswa" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">No.Telp Mahasiswa</label>
+                                <input type="tel" class="form-control" id="name" name="telp" placeholder="0812-XXXX-XXXX" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}" required>  
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Tahun Masuk</label>
+                                <input type="month" class="form-control" name="yearStart" placeholder="Enter Tahun Masuk" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Upload Foto Mahasiswa</label>
+                                <input type="file" class="form-control" name="image" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema;
 
-const newsSchema = new mongoose.Schema({
+const researchSchema = new mongoose.Schema({
     topic: {
         type: String,
         enum: ['Teknologi', 'Industri', 'Sipil & Arsitek', 'Medis', 'Sosial', 'Ekonomi', 'Sastra', 'Keilmuan'],
         required: true
     },
-    headline: {
+    title: {
         type: String,
         required: true
     },
@@ -14,10 +15,18 @@ const newsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    image: {
+    document: {
         type: String,
         required: true
+    },
+    releaseDate: {
+        type: Date,
+        required: true
+    },
+    studentId: {
+        type: ObjectId,
+        ref: 'Student'
     }
 });
 
-module.exports = mongoose.model('News', newsSchema);
+module.exports = mongoose.model('Research', researchSchema);

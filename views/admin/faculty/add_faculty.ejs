@@ -1,25 +1,31 @@
-    <div class="tab-pane fade" id="add-faculty" role="tabpanel" aria-labelledby="profile-tab">
-        <div class="card shadow mb-4 mb-2">
-            <div class="card-body">
-                <form action="/admin/faculty" method="POST" enctype="multipart/form-data">
+<div class="tab-pane fade" id="add-faculty" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="card shadow mb-4 mb-2">
+        <div class="card-body">
+            <form action="/admin/faculty" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
                     <div class="form-group">
                         <label for="name">Nama Fakultas</label>
-                        <input type="text" class="form-control" name="faculty" placeholder="Enter Nama Fakultas" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Nama Fakultas" required>
                     </div>
                     <div class="form-group">
-                        <label for="name">Panggilan Fakultas</label>
-                        <input type="text" class="form-control" name="stands" placeholder="Enter Panggilan Fakultas" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Image Fakultas</label>
-                        <input type="file" class="form-control" name="image" multiple required>
+                        <label for="name">Nama Singkatan</label>
+                        <input type="text" class="form-control" id="name" name="stand" placeholder="Enter Nama Singkatan" required>
                     </div>
                     <div class="form-group">
                         <label for="name">Tentang Fakultas</label>
                         <textarea class="form-control" name="about" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </form>
-            </div>
+                    <div class="form-group">
+                        <label for="name">Upload Image Fakultas</label>
+                        <input type="file" class="form-control" name="image" multiple required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Add</button>
+                </div>
+            </form>
+        </div>
         </div>
     </div>
+</div>

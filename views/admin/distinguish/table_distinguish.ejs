@@ -1,0 +1,38 @@
+<div class="tab-pane fade show active" id="show-distinguish" role="tabpanel" aria-labelledby="home-tab">
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>Fakultas</th>
+                            <th>Tahun Masuk</th>
+                            <th>Prestasi</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0; i < distinguish.length; i++) { %>
+                            <tr>
+                                <td><%= i+1 %></td>
+                                <td><%= distinguish[i].studentId.name %></td>
+                                <td><%= distinguish[i].studentId.facultyId.name %></td>
+                                <td><%= distinguish[i].studentId.yearStart.getUTCFullYear() %></td>
+                                <td><%= distinguish[i].best %></td>
+                                <td>
+                                    <form action="/admin/distinguish/<%= distinguish[i].id %>/delete?_method=DELETE" method="POST">
+                                        <a href="/admin/distinguish/<%= distinguish[i].id %>" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i></a>
+                                        <button type="submit" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    

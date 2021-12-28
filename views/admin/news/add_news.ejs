@@ -2,28 +2,37 @@
     <div class="card shadow mb-4 mb-2">
         <div class="card-body">
             <form action="/admin/news" method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="name">Kategori Berita</label>
-                    <select class="form-control" name="scoopId">
-                        <option value="" disabled selected>Kategori</option>
-                        <% for(i = 0; i < scoop.length; i++) { %>
-                            <option value="<%= scoop[i].id %>"><%= scoop[i].name %></option>
-                        <% } %>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Topik Berita</label>
+                        <select id="topic" class="form-control" name="topic">
+                            <option value="" disabled selected>Topik Berita</option>
+                            <option value="Teknologi">Teknologi</option>
+                            <option value="Industri">Industri</option>
+                            <option value="Sipil & Arsitek">Sipil & Arsitek</option>
+                            <option value="Medis">Medis</option>
+                            <option value="Sosial">Sosial</option>
+                            <option value="Ekonomi">Ekonomi</option>
+                            <option value="Sastra">Sastra</option>
+                            <option value="Keilmuan">Keilmuan</option>
                     </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Judul Headline</label>
+                        <input type="text" class="form-control" id="name" name="headline" placeholder="Enter Headline Berita" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Konten Berita</label>
+                        <textarea class="form-control" name="about" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Upload Gambar</label>
+                        <input type="file" class="form-control" name="image" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="name">Headline</label>
-                    <input type="text" class="form-control" name="headline" placeholder="Enter Headline Berita" required>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Add</button>
                 </div>
-                <div class="form-group">
-                    <label for="name">Image Berita</label>
-                    <input type="file" class="form-control" name="image" required>
-                </div>
-                <div class="form-group">
-                    <label for="name">Deskripsi Berita</label>
-                    <textarea class="form-control" name="about" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Add</button>
             </form>
         </div>
     </div>

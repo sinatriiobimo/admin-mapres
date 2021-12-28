@@ -18,31 +18,31 @@
         <%- include('../../partials/message.ejs') %>
         
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Faculty</h1>
+        <h1 class="h3 mb-4 text-gray-800">Penelitian</h1>
         <!-- End Heading -->
         
         <!-- START NAV -->        
         <% if(action == 'view') { %>
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#show-faculty" role="tab" aria-controls="home">Show Fakultas</a>
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#show-research" role="tab" aria-controls="home">Show Penelitian</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#add-faculty" role="tab" aria-controls="profile" aria-selected="false">Add Fakultas</a>
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#add-research" role="tab" aria-controls="profile" aria-selected="false">Add Penelitian</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
-            <%- include('table_faculty.ejs') %>
-            <%- include('add_faculty.ejs') %>
+            <%- include('table_research.ejs') %>
+            <%- include('add_research.ejs') %>
           </div>
           <% } else if(action == 'edit') { %>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#edit-faculty" role="tab" aria-controls="home">Ubah Fakultas</a>
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#edit-research" role="tab" aria-controls="home">Ubah Penelitian</a>
               </li>
             </ul>
             <div class="tab-content" id="myTabContent">
-              <%- include('edit_faculty.ejs') %>
+              <%- include('edit_research.ejs') %>
             </div>
             <% } %>
           </div>
@@ -52,6 +52,8 @@
           
         </div>
         <!-- End of Main Content -->
+        
+        <%- include('../../partials/footer.ejs') %>
         
       </div>
       <!-- End of Content Wrapper -->

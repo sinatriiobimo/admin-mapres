@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
-const {ObjectId} = mongoose.Schema;
+const { ObjectId } = mongoose.Schema;
 
 const facultySchema = new mongoose.Schema({
-    faculty: {
+    name: {
         type: String,
         required: true
     },
-    stands: {
+    stand: {
+        type: String,
+        required: true
+    },
+    about: {
         type: String,
         required: true
     },
@@ -14,30 +18,30 @@ const facultySchema = new mongoose.Schema({
         type: ObjectId,
         ref: 'Image'
     }],
-    about: {
-        type: String,
-        required: true
-    },
-    achieveId: [{
-        type: ObjectId,
-        ref: 'Achieve'
-    }],
     majorId: [{
         type: ObjectId,
         ref: 'Major'
-    }],
-    mapresId: [{
-        type: ObjectId,
-        ref: 'Mapres'
     }],
     studentId: [{
         type: ObjectId,
         ref: 'Student'
     }],
-    prestasiId: [{
+    achievementId: [{
         type: ObjectId,
-        ref: 'Prestasi'
-    }]
+        ref: 'Achievement'
+    }],
+    researchId: [{
+        type: ObjectId,
+        ref: 'Research'
+    }],
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 module.exports = mongoose.model('Faculty', facultySchema);

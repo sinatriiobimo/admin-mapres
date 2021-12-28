@@ -1,0 +1,48 @@
+<div class="tab-pane fade show active" id="show-faculty" role="tabpanel" aria-labelledby="home-tab">
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Fakultas</th>
+                            <th>Nama Umum</th>
+                            <th>Jurusan</th>
+                            <th>Mahasiswa Qty</th>
+                            <th>Mapres Qty</th>
+                            <th>Penelitian Qty</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0; i < faculty.length; i++) { %>
+                            <tr>
+                                <td><%= i+1 %></td>
+                                <td><%= faculty[i].name %></td>
+                                <td><%= faculty[i].stand %></td>
+                                <td>
+                                    <ul>
+                                        <% for (item of faculty[i].majorId) { %>
+                                            <li> <%= item.name %> </li>
+                                            <% } %>
+                                        </ul>
+                                    </td>
+                                    <td><%= faculty[i].studentId.length %></td>
+                                    <td><%= faculty[i].achievementId.length %></td>
+                                    <td><%= faculty[i].researchId.length %></td>
+                                    <td>
+                                        <form action="/admin/faculty/<%= faculty[i].id %>/delete?_method=DELETE" method="POST">
+                                            <a href="/admin/faculty/<%= faculty[i].id %>" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i></a>
+                                            <button type="submit" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        

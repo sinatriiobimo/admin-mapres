@@ -1,0 +1,34 @@
+<div class="tab-pane fade show active" id="show-news" role="tabpanel" aria-labelledby="home-tab">
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Topik</th>
+                            <th>Headline</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0; i < news.length; i++) { %>
+                            <tr>
+                                <td><%= i+1 %></td>
+                                <td><%= news[i].topic %></td>
+                                <td><%= news[i].headline %></td>
+                                <td>
+                                    <form action="/admin/news/<%= news[i].id %>/delete?_method=DELETE" method="POST">
+                                        <a href="/admin/news/<%= news[i].id %>" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i></a>
+                                        <button type="submit" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    

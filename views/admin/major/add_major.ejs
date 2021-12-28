@@ -4,28 +4,28 @@
             <form action="/admin/major" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="name">Fakultas</label>
-                        <select class="form-control" name="facultyId">
-                            <option value="" disabled selected>Fakultas</option>
-                            <% for(i = 0; i < faculty.length; i++) { %>
-                                <option value="<%= faculty[i].id %>"><%= faculty[i].faculty %></option>
-                            <% } %>
-                        </select>
+                        <label for="name">Nama Jurusan</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Nama Jurusan" required>
                     </div>
                     <div class="form-group">
                         <label for="name">Kode Jurusan</label>
-                        <input type="text" class="form-control" name="code" placeholder="Enter Kode Jurusan" required>
+                        <input type="text" class="form-control" id="name" name="code" placeholder="Enter Kode Jurusan" required>
                     </div>
                     <div class="form-group">
-                        <label for="name">Nama Jurusan</label>
-                        <input type="text" class="form-control" name="name" placeholder="Enter Nama Jurusan" required>
-                    </div>
+                        <label for="name">Nama Fakultas</label>
+                        <select class="form-control" name="facultyId">
+                            <option value="" disabled selected>Fakultas</option>
+                            <% for(i = 0; i < faculty.length; i++) { %>
+                                <option value="<%= faculty[i].id %>"><%= faculty[i].name %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Add</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>

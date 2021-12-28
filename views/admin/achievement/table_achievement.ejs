@@ -1,0 +1,49 @@
+<div class="tab-pane fade show active" id="show-achievement" role="tabpanel" aria-labelledby="home-tab">
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>Kepesertaan</th>
+                            <th>Peringkat</th>
+                            <th>Kompetisi</th>
+                            <th>Karya</th>
+                            <th>Negara Qty</th>
+                            <th>Universitas Qty</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Tanggal Berakhir</th>
+                            <th>Skala</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0; i < achievement.length; i++) { %>
+                            <tr>
+                                <td><%= i+1 %></td>
+                                <td><%= achievement[i].studentId.name %></td>
+                                <td><%= achievement[i].participant%></td>
+                                <td><%= achievement[i].rank %></td>
+                                <td><%= achievement[i].event %></td>
+                                <td><%= achievement[i].creation %></td>
+                                <td><%= achievement[i].countryQty %></td>
+                                <td><%= achievement[i].uniQty %></td>
+                                <td><%= achievement[i].startDate.toLocaleString('default', { month: 'short' }) %> <%= achievement[i].startDate.getUTCFullYear() %></td>
+                                <td><%= achievement[i].endDate.toLocaleString('default', { month: 'short' }) %> <%= achievement[i].endDate.getUTCFullYear() %></td>
+                                <td><%= achievement[i].scale %></td>
+                                <td>
+                                    <form action="/admin/achievement/<%= achievement[i].id %>/delete?_method=DELETE" method="POST">
+                                        <a href="/admin/achievement/<%= achievement[i].id %>" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i></a>
+                                        <button type="submit" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

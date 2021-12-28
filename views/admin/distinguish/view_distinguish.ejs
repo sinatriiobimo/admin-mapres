@@ -18,31 +18,31 @@
         <%- include('../../partials/message.ejs') %>
         
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Faculty</h1>
+        <h1 class="h3 mb-4 text-gray-800">Mahasiswa Berprestasi</h1>
         <!-- End Heading -->
         
         <!-- START NAV -->        
         <% if(action == 'view') { %>
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#show-faculty" role="tab" aria-controls="home">Show Fakultas</a>
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#show-distinguish" role="tab" aria-controls="home">Show Mapres</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#add-faculty" role="tab" aria-controls="profile" aria-selected="false">Add Fakultas</a>
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#add-distinguish" role="tab" aria-controls="profile" aria-selected="false">Add Mapres</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
-            <%- include('table_faculty.ejs') %>
-            <%- include('add_faculty.ejs') %>
+            <%- include('table_distinguish.ejs') %>
+            <%- include('add_distinguish.ejs') %>
           </div>
           <% } else if(action == 'edit') { %>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#edit-faculty" role="tab" aria-controls="home">Ubah Fakultas</a>
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#edit-distinguish" role="tab" aria-controls="home">Ubah Mapres</a>
               </li>
             </ul>
             <div class="tab-content" id="myTabContent">
-              <%- include('edit_faculty.ejs') %>
+              <%- include('edit_distinguish.ejs') %>
             </div>
             <% } %>
           </div>
