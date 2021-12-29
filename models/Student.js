@@ -37,9 +37,9 @@ const studentSchema = new mongoose.Schema({
         type: ObjectId,
         ref: 'Achievement'
     }],
-    researchId: [{
+    teamId: [{
         type: ObjectId,
-        ref: 'Research'
+        ref: 'Team'
     }],
     distinguishId: [{
         type: ObjectId,

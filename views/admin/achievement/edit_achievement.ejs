@@ -5,102 +5,106 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="name">Nama Mahasiswa</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Nama Mahasiswa" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Nama Kompetisi</label>
-                        <input type="text" class="form-control" id="name" name="event" placeholder="Enter Nama Kompetisi" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Nama Karya</label>
-                        <input type="text" class="form-control" id="name" name="creation" placeholder="Enter Nama Karya" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="participant">Kepesertaan</label>
-                        <select id="participant" class="form-control" name="participant" required>
-                            <option value="" disabled selected>Kepesertaan</option>
-                            <option value="Individu">Individu</option>
-                            <option value="Tim">Tim</option>
-                        </select>
-                    </div>
-
-                    <% if( false ) { %>
+                        <select class="form-control" name="studentId">
+                            <option value="<%= achievement.studentId._id %>"><%= achievement.studentId.name %></option>
+                            <% for(i = 0; i < student.length; i++) { %>
+                                <option value="<%= student[i].id %>"><%= student[i].name %>
+                                </option>
+                                <% } %>
+                            </select>  
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Nama Kompetisi</label>
+                            <input type="text" class="form-control" value="<%= achievement.event %>" name="event" placeholder="Enter Nama Kompetisi" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Nama Karya</label>
+                            <input type="text" class="form-control" value="<%= achievement.creation %>" name="creation" placeholder="Enter Nama Karya" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="participant">Kepesertaan</label>
+                            <select id="participant" class="form-control" name="participant" required>
+                                <option value="<%= achievement.participant %>"><%= achievement.participant %></option>
+                                <option value="Individu">Individu</option>
+                                <option value="Tim">Tim</option>
+                            </select>
+                        </div>
+                        
                         <div class="form-group">
                             <label for="name">Nama Tim</label>
-                            <input type="text" class="form-control" id="name" name="team" placeholder="Enter Nama Tim" required>
-                        </div>
-                    <% } %>
-
-                    <div class="form-group">
-                        <label for="rank">Peringkat</label>
-                        <select id="rank" class="form-control" name="rank" required>
-                            <option value="" disabled selected>Peringkat</option>
-                            <option value="Juara 1">Juara 1</option>
-                            <option value="Juara 2">Juara 2</option>
-                            <option value="Juara 3">Juara 3</option>
-                            <option value="Harapan 1">Harapan 1</option>
-                            <option value="Harapan 2">Harapan 2</option>
-                            <option value="Harapan 3">Harapan 3</option>
-                            <option value="Favorit">Favorit</option>
-                            <option value="Finalist">Finalist</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Tipe Kompetisi</label>
-                        <select id="type" class="form-control" name="type" required>
-                            <option value="" disabled selected>Tipe Kompetisi</option>
-                            <option value="Akademik">Akademik</option>
-                            <option value="NonAkademik">Non Akademik</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="scale">Skala</label>
-                        <select id="scale" class="form-control" name="scale" required>
-                            <option value="Nasional">Nasional</option>
-                            <option value="Internasional">Internasional</option>
-                            <option value="Wilayah">Wilayah</option>
-                            <option value="Provinsi">Provinsi</option>
-                        </select>
-                    </div>
-
-
-                    <% if( false ) { %>
-                        <div class="form-group">
-                            <label for="name">Jumlah Negara</label>
-                            <input type="number" class="form-control" id="name" name="countryQty" placeholder="Enter Jumlah Negara" required>
-                        </div>
-                    <% } %>
-
-                    
-                    <div class="form-group">
-                        <label for="name">Jumlah Universitas</label>
-                        <input type="number" class="form-control" id="name" name="uniQty" placeholder="Enter Jumlah Universitas" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Tanggal Mulai</label>
-                        <input type="month" class="form-control" name="startDate" placeholder="Enter Tanggal Mulai" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Tanggal Berakhir</label>
-                        <input type="month" class="form-control" name="endDate" placeholder="Enter Tanggal Berakhir" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">URL Berita</label>
-                        <input type="text" class="form-control" id="name" name="newsURL" placeholder="Enter URL Berita">
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Upload Dokumen</label>
-                        <input type="file" class="form-control" name="document" required>
+                            <select class="form-control" name="teamId">
+                                <option value="<%= achievement.teamId._id %>"><%= achievement.teamId.name %></option>
+                                <% for(i = 0; i < team.length; i++) { %>
+                                    <option value="<%= team[i].id %>"><%= team[i].name %>
+                                    </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            
+                            
+                            <div class="form-group">
+                                <label for="rank">Peringkat</label>
+                                <select id="rank" class="form-control" name="rank" required>
+                                    <option value="<%= achievement.rank %>"><%= achievement.rank %></option>
+                                    <option value="Juara 1">Juara 1</option>
+                                    <option value="Juara 2">Juara 2</option>
+                                    <option value="Juara 3">Juara 3</option>
+                                    <option value="Harapan 1">Harapan 1</option>
+                                    <option value="Harapan 2">Harapan 2</option>
+                                    <option value="Harapan 3">Harapan 3</option>
+                                    <option value="Favorit">Favorit</option>
+                                    <option value="Finalist">Finalist</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="type">Tipe Kompetisi</label>
+                                <select id="type" class="form-control" name="type" required>
+                                    <option value="<%= achievement.type %>"><%= achievement.type %></option>
+                                    <option value="Akademik">Akademik</option>
+                                    <option value="NonAkademik">Non Akademik</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="scale">Skala</label>
+                                <select id="scale" class="form-control" name="scale" required>
+                                    <option value="<%= achievement.scale %>"><%= achievement.scale %></option>
+                                    <option value="Nasional">Nasional</option>
+                                    <option value="Internasional">Internasional</option>
+                                    <option value="Wilayah">Wilayah</option>
+                                    <option value="Provinsi">Provinsi</option>
+                                </select>
+                            </div>
+                            
+                            
+                            <% if( false ) { %>
+                                <div class="form-group">
+                                    <label for="name">Jumlah Negara</label>
+                                    <input type="number" class="form-control" name="countryQty" placeholder="Enter Jumlah Negara" required>
+                                </div>
+                                <% } %>
+                                
+                                
+                                <div class="form-group">
+                                    <label for="name">Jumlah Universitas</label>
+                                    <input type="number" class="form-control" value="<%= achievement.uniQty %>" name="uniQty" placeholder="Enter Jumlah Universitas" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">URL Berita</label>
+                                    <input type="text" class="form-control" name="newsURL" placeholder="Enter URL Berita">
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">Upload Dokumen</label>
+                                    <input type="file" class="form-control" name="document">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary">
+                                    <a style="text-decoration: none; color: white;" href="/admin/achievement">Back</a>
+                                </button>                    
+                                <button type="submit" class="btn btn-success">Add</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary">
-                        <a style="text-decoration: none; color: white;" href="/admin/achievement">Back</a>
-                    </button>                    
-                    <button type="submit" class="btn btn-success">Add</button>
-                </div>
-            </form>
+            </div>
         </div>
-        </div>
-    </div>
-</div>

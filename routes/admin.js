@@ -40,12 +40,6 @@ router.put('/news/:id', uploadSingle, adminController.editNews);
 router.get('/news/:id', adminController.showEditNews);
 router.delete('/news/:id/delete', adminController.deleteNews);
 
-router.get('/research', adminController.viewResearch);
-router.post('/research', uploadDocument, adminController.addResearch);
-router.get('/research/:id', adminController.showEditResearch);
-router.put('/research/:id', uploadDocument, adminController.editResearch);
-router.delete('/research/:id/delete', adminController.deleteResearch);
-
 router.get('/distinguish', adminController.viewDistinguish);
 router.post('/distinguish', adminController.addDistinguish);
 router.get('/distinguish/:id', adminController.showEditDistinguish);

@@ -69,10 +69,10 @@ const achievementSchema = new mongoose.Schema({
         type: ObjectId,
         ref: 'Major'
     },
-    teamId: [{
+    teamId: {
         type: ObjectId,
         ref: 'Team'
-    }],
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -30,10 +30,6 @@ const facultySchema = new mongoose.Schema({
         type: ObjectId,
         ref: 'Achievement'
     }],
-    researchId: [{
-        type: ObjectId,
-        ref: 'Research'
-    }],
     createdAt: {
         type: Date,
         default: Date.now

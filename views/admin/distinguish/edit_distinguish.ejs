@@ -6,12 +6,11 @@
                     <div class="form-group">
                         <label for="name">Nama Mahasiswa</label>
                         <select class="form-control" name="studentId">
-                            <option value="<%= distinguish.studentId._id %>" disabled selected><%= distinguish.studentId.name %></option>
+                            <option value="<%= distinguish.studentId._id %>"><%= distinguish.studentId.name %></option>
                             <% for(i = 0; i < student.length; i++) { %>
                                 <option value="<%= student[i].id %>"><%= student[i].name %></option>
-                                <% } %>
-                            </select>                    
-                        </div>
+                            <% } %>
+                            </select>  
                     </div>
                     <div class="form-group">
                         <label for="name">Prestasi Terbaik</label>

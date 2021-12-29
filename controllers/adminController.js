@@ -4,7 +4,6 @@ const Faculty = require('../models/Faculty');
 const Achievement = require('../models/Achievement');
 const Team = require('../models/Team');
 const Distinguish = require('../models/Distinguish');
-const Research = require('../models/Research');
 const Image = require('../models/Image');
 const News = require('../models/News');
 const Users = require('../models/Users');
@@ -46,7 +45,6 @@ module.exports = {
         try {
             const {username, password} = req.body;
             const user = await Users.findOne({username: username});
-            console.log(user);
             if(!user) {
                 req.flash('alertMessage', "User can't be found");
                 req.flash('alertStatus', 'danger');
@@ -81,12 +79,15 @@ module.exports = {
             const achievement = await Achievement.find()
             .populate({path: 'studentId', select: 'id name'})
             .populate({path: 'facultyId', select: 'id name'})
-            .populate({path: 'majorId', select: 'id name'});
+            .populate({path: 'majorId', select: 'id name'})
+            .populate({path: 'teamId', select: 'id name'});
             const student = await Student.find()
             .populate({path: 'facultyId', select: 'id name'})
+            .populate({path: 'teamId', select: 'id name'})
             .populate({path: 'majorId', select: 'id name'});
             const faculty = await Faculty.find();
             const major = await Major.find();
+            const team = await Team.find();
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status: alertStatus};
@@ -96,6 +97,7 @@ module.exports = {
                 student,
                 faculty,
                 major,
+                team,
                 achievement,
                 action: 'view',
                 user: req.session.user
@@ -115,18 +117,21 @@ module.exports = {
                 res.redirect(`/admin/achievement`);
             }
             
-            const {studentId, facultyId, majorId, event, participant, scale, type, creation, countryQty, uniQty, rank, startDate, endDate, document, newsURL} = req.body;
+            const {studentId, facultyId, majorId, teamId, event, participant, scale, type, creation, countryQty, uniQty, rank, startDate, endDate, document, newsURL} = req.body;
             const student = await Student.findOne({id: studentId})
             .populate({path: 'facultyId', select: 'id name'})
+            .populate({path: 'teamId', select: 'id name'})
             .populate({path: 'majorId', select: 'id name'});
             
             const faculty = await Faculty.findOne({id: facultyId});
             const major = await Major.findOne({id: majorId});
+            const team = await Team.findOne({id: teamId});
             
             const newAchievement = {
                 studentId: student._id,
                 facultyId: faculty._id,
                 majorId: major._id,
+                teamId: team._id,
                 event,
                 participant,
                 scale,
@@ -149,6 +154,8 @@ module.exports = {
             await faculty.save();
             major.achievementId.push({_id: achievement._id});
             await major.save();
+            team.achievementId.push({_id: achievement._id});
+            await team.save();
             
             req.flash('alertMessage', 'Success Add New achievement');
             req.flash('alertStatus', 'success');
@@ -163,9 +170,11 @@ module.exports = {
     showEditAchievement: async(req, res) => {
         try {
             const { id } = req.params;
-            const achievement = await Achievement.findOne({_id: id})
-            .populate({path: 'studentId', select: 'id name'});
+            const achievement = await Achievement.findOne({_id: id})        
+            .populate({path: 'studentId', select: 'id name'})
+            .populate({path: 'teamId', select: 'id name'});
             const student = await Student.find();
+            const team = await Team.find();
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status: alertStatus};
@@ -174,6 +183,7 @@ module.exports = {
                 alert,
                 achievement,
                 student,
+                team,
                 user: req.session.user,
                 action: 'edit',
             })
@@ -187,32 +197,55 @@ module.exports = {
     editAchievement: async (req, res) => {
         try {
             const { id } = req.params;
-            const { topic, headline, about } = req.body;
-            const news = await News.findOne({_id: id});
+            const { studentId, facultyId, majorId, teamId, event, participant, scale, type, creation, countryQty, uniQty, rank, newsURL } = req.body;
+            const achievement = await Achievement.findOne({_id: id});
             
             if(req.file === undefined) {
-                news.headline = headline;
-                news.about = about;
-                news.topic = topic;
-                await news.save();
-                req.flash('alertMessage', 'Success Update New News');
+                achievement.studentId = studentId;
+                achievement.facultyId = facultyId;
+                achievement.majorId = majorId;
+                achievement.teamId = teamId;
+                achievement.event = event;
+                achievement.participant = participant;
+                achievement.scale = scale;
+                achievement.type = type;
+                achievement.type = type;
+                achievement.creation = creation;
+                achievement.countryQty = countryQty;
+                achievement.uniQty = uniQty;
+                achievement.rank = rank;
+                achievement.newsURL = newsURL;
+                await achievement.save();
+                req.flash('alertMessage', 'Success Update New Achievement');
                 req.flash('alertStatus', 'success');
-                res.redirect('/admin/news');
+                res.redirect('/admin/achievement');
             } else {
-                await fs.unlink(path.join(`public/${news.image}`));
-                news.headline = headline;
-                news.about = about;
-                news.topic = topic;
-                news.image = `images/${req.file.filename}`;
-                await news.save();
-                req.flash('alertMessage', 'Success Update News');
+                await fs.unlink(path.join(`public/${achievement.document}`));
+                achievement.studentId = studentId;
+                achievement.facultyId = facultyId;
+                achievement.majorId = majorId;
+                achievement.teamId = teamId;
+                achievement.event = event;
+                achievement.participant = participant;
+                achievement.scale = scale;
+                achievement.type = type;
+                achievement.type = type;
+                achievement.creation = creation;
+                achievement.countryQty = countryQty;
+                achievement.uniQty = uniQty;
+                achievement.rank = rank;
+                achievement.newsURL = newsURL;
+                achievement.document = `docs/${req.file.filename}`;
+                
+                await achievement.save();
+                req.flash('alertMessage', 'Success Update Achievement');
                 req.flash('alertStatus', 'success');
-                res.redirect('/admin/news');
+                res.redirect('/admin/achievement');
             }
         } catch (error) {
             req.flash('alertMessage', `${error.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/admin/news');
+            res.redirect('/admin/achievement');
         }
     },
     
@@ -223,6 +256,7 @@ module.exports = {
             const student = await Student.findOne({ _id: achievement.studentId }).populate('achievementId');
             const faculty = await Faculty.findOne({ _id: achievement.facultyId }).populate('achievementId');
             const major = await Major.findOne({ _id: achievement.majorId }).populate('achievementId');
+            const team = await Team.findOne({ _id: achievement.teamId }).populate('achievementId');
             for(let i = 0; i < student.achievementId.length; i++) {
                 if(student.achievementId[i]._id.toString() === achievement._id.toString()) {
                     student.achievementId.pull({ _id: achievement._id });
@@ -239,6 +273,12 @@ module.exports = {
                 if(major.achievementId[i]._id.toString() === achievement._id.toString()) {
                     major.achievementId.pull({ _id: achievement._id });
                     await major.save();
+                }
+            }
+            for(let i = 0; i < team.achievementId.length; i++) {
+                if(team.achievementId[i]._id.toString() === achievement._id.toString()) {
+                    team.achievementId.pull({ _id: achievement._id });
+                    await team.save();
                 }
             }
             await achievement.remove();
@@ -342,7 +382,7 @@ module.exports = {
     editStudent: async (req, res) => {
         try {
             const {id} = req.params;
-            const {facultyId, majorId, name, npm, email, noTelp, yearStart} = req.body;
+            const { name, npm, email, noTelp } = req.body;
             const student = await Student.findOne({_id: id})
             .populate({path: 'facultyId', select: 'id name'})
             .populate({path: 'majorId', select: 'id name'});
@@ -352,9 +392,7 @@ module.exports = {
                 student.npm = npm;
                 student.email = email;
                 student.noTelp = noTelp;
-                student.yearStart = yearStart;
-                student.facultyId = facultyId;
-                student.majorId = majorId;
+                
                 await student.save();
                 req.flash('alertMessage', 'Success Update New Student');
                 req.flash('alertStatus', 'success');
@@ -365,9 +403,6 @@ module.exports = {
                 student.npm = npm;
                 student.email = email;
                 student.noTelp = noTelp;
-                student.yearStart = yearStart;
-                student.facultyId = facultyId;
-                student.majorId = majorId;
                 student.image = `images/${req.file.filename}`;
                 await student.save();
                 req.flash('alertMessage', 'Success Update Student');
@@ -614,13 +649,16 @@ module.exports = {
     
     editMajor: async (req, res) => {
         try {
-            const {id} = req.params;
+            const { id } = req.params;
             const { facultyId, name, code } = req.body;
             const major = await Major.findOne({_id: id}).populate({path: 'facultyId', select: 'id name'});
+            
             major.name = name;
             major.code = code;
             major.facultyId = facultyId;
+            
             await major.save();
+            
             req.flash('alertMessage', 'Success Update Major');
             req.flash('alertStatus', 'success');
             res.redirect('/admin/major');
@@ -768,139 +806,6 @@ module.exports = {
         }
     },
     
-    // Research
-    viewResearch: async (req, res) => {
-        try {
-            const research = await Research.find().populate({path: 'studentId', select: 'id name'});
-            const student = await Student.find().populate({path: 'majorId', select: 'id name'});
-            const alertMessage = req.flash('alertMessage');
-            const alertStatus = req.flash('alertStatus');
-            const alert = {message: alertMessage, status: alertStatus};
-            res.render('admin/research/view_research', {
-                title: "Mapres UG | Beranda Berita",
-                alert,
-                research,
-                student,
-                user: req.session.user,
-                action: 'view',
-            })
-        } catch (error) {
-            req.flash('alertMessage', `${error.message}`);
-            req.flash('alertStatus', 'danger');
-            res.redirect('/admin/research');   
-        }
-    },
-    
-    addResearch: async (req, res) => {
-        try {
-            if(!req.file) {
-                req.flash('alertMessage', 'Image not found');
-                req.flash('alertStatus', 'danger');
-                res.redirect(`/admin/research`);
-            }
-            
-            const {studentId, topic, about, title, releaseDate} = req.body;
-            const student = await Student.findOne({id: studentId});
-            const newResearch = {
-                studentId: student._id,
-                topic,
-                title,
-                releaseDate,
-                about,
-                document: `docs/${req.file.filename}`
-            }
-            
-            const research = await Research.create(newResearch);
-            student.researchId.push({_id: research._id});
-            await student.save();
-            
-            req.flash('alertMessage', 'Success Add New Research');
-            req.flash('alertStatus', 'success');
-            res.redirect('/admin/research');
-        } catch (error) {
-            req.flash('alertMessage', `${error.message}`);
-            req.flash('alertStatus', 'danger');
-            res.redirect('/admin/research');
-        }
-    },
-    
-    showEditResearch: async(req, res) => {
-        try {
-            const { id } = req.params;
-            const research = await Research.findOne({_id: id}).populate({path: 'studentId', select: 'id name'});
-            const student = await Student.find();
-            const alertMessage = req.flash('alertMessage');
-            const alertStatus = req.flash('alertStatus');
-            const alert = {message: alertMessage, status: alertStatus};
-            res.render('admin/research/view_research', {
-                title: 'Mapres UG | Edit Penelitian',
-                alert,
-                research,
-                student,
-                user: req.session.user,
-                action: 'edit',
-            })
-        } catch (error) {
-            req.flash('alertMessage', `${error.message}`);
-            req.flash('alertStatus', 'danger');
-            res.redirect('/admin/research')    
-        }
-    },
-    
-    editResearch: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const { topic, headline, about } = req.body;
-            const news = await News.findOne({_id: id});
-            
-            if(req.file === undefined) {
-                news.headline = headline;
-                news.about = about;
-                news.topic = topic;
-                await news.save();
-                req.flash('alertMessage', 'Success Update New News');
-                req.flash('alertStatus', 'success');
-                res.redirect('/admin/news');
-            } else {
-                await fs.unlink(path.join(`public/${news.image}`));
-                news.headline = headline;
-                news.about = about;
-                news.topic = topic;
-                news.image = `images/${req.file.filename}`;
-                await news.save();
-                req.flash('alertMessage', 'Success Update News');
-                req.flash('alertStatus', 'success');
-                res.redirect('/admin/news');
-            }
-        } catch (error) {
-            req.flash('alertMessage', `${error.message}`);
-            req.flash('alertStatus', 'danger');
-            res.redirect('/admin/news');
-        }
-    },
-    
-    deleteResearch: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const research = await Research.findOne({_id: id});
-            const student = await Student.findOne({ _id: research.studentId }).populate('researchId');
-            for(let i = 0; i < student.researchId.length; i++) {
-                if(student.researchId[i]._id.toString() === research._id.toString()) {
-                    student.researchId.pull({ _id: research._id });
-                    await student.save();
-                }
-            }
-            await research.remove();
-            req.flash('alertMessage', 'Success Delete research');
-            req.flash('alertStatus', 'success');
-            res.redirect('/admin/research');
-        } catch (error) {
-            req.flash('alertMessage', `${error.message}`);
-            req.flash('alertStatus', 'danger');
-            res.redirect('/admin/research');
-        }
-    },
-    
     // Distinguish
     viewDistinguish: async (req, res) => {
         try {
@@ -979,10 +884,13 @@ module.exports = {
         try {
             const {id} = req.params;
             const { studentId, best, about } = req.body;
-            const distinguish = await Distinguish.findOne({_id: id}).populate({path: 'studentId', select: 'id name'});
+            const distinguish = await Distinguish.findOne({_id: id});
             distinguish.best = best;
             distinguish.about = about;
             distinguish.studentId = studentId;
+            console.log(distinguish.best);
+            console.log(distinguish.about);
+            console.log(distinguish.studentId);
             await distinguish.save();
             req.flash('alertMessage', 'Success Update Distinguish');
             req.flash('alertStatus', 'success');

@@ -3,11 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const methodOverride = require('method-override');
-const session = require('express-session');
-const flash = require('connect-flash');
+var methodOverride = require('method-override');
+var session = require('express-session');
+var flash = require('connect-flash');
 
-const mongoose = require('mongoose');
+var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/db_mapres', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -27,7 +27,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 60000 }
+  cookie  : { maxAge  : new Date(Date.now() + (60 * 1000 * 30)) }
 }));
 app.use(flash());
 app.use(logger('dev'));

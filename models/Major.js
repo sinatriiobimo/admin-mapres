@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema;
 
 const majorSchema = new mongoose.Schema({
+    facultyId: {
+        type: ObjectId,
+        ref: 'Faculty'
+    },
     name: {
         type: String,
         required: true
@@ -10,10 +14,6 @@ const majorSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    facultyId: {
-        type: ObjectId,
-        ref: 'Faculty'
-    },
     studentId: [{
         type: ObjectId,
         ref: 'Student'
@@ -21,10 +21,6 @@ const majorSchema = new mongoose.Schema({
     achievementId: [{
         type: ObjectId,
         ref: 'Achievement'
-    }],
-    researchId: [{
-        type: ObjectId,
-        ref: 'Research'
     }],
     createdAt: {
         type: Date,
