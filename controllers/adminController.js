@@ -860,15 +860,13 @@ module.exports = {
     showEditDistinguish: async(req, res) => {
         try {
             const { id } = req.params;
-            const distinguish = await Distinguish.findOne({_id: id}).populate({path: 'studentId', select: 'id name'});
-            const student = await Student.find();
+            const distinguish = await Distinguish.findOne({_id: id}).populate({path: 'studentId'});
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status: alertStatus};
             res.render('admin/distinguish/view_distinguish', {
                 title: 'Mapres UG | Edit Mahasiswa Berprestasi',
                 alert,
-                student,
                 distinguish,
                 user: req.session.user,
                 action: 'edit',
@@ -882,16 +880,15 @@ module.exports = {
     
     editDistinguish: async (req, res) => {
         try {
-            const {id} = req.params;
-            const { studentId, best, about } = req.body;
-            const distinguish = await Distinguish.findOne({_id: id});
+            const { id } = req.params;
+            const { best, about } = req.body;
+            const distinguish = await Distinguish.findOne({_id: id}).populate({path: 'studentId'});
+            
             distinguish.best = best;
             distinguish.about = about;
-            distinguish.studentId = studentId;
-            console.log(distinguish.best);
-            console.log(distinguish.about);
-            console.log(distinguish.studentId);
+            
             await distinguish.save();
+            
             req.flash('alertMessage', 'Success Update Distinguish');
             req.flash('alertStatus', 'success');
             res.redirect('/admin/distinguish');
