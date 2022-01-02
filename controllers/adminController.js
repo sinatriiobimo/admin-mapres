@@ -9,12 +9,22 @@ const Users = require('../models/Users');
 const fs = require('fs-extra');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const ExcelJS = require('exceljs');
 
 module.exports = {
-    viewDashboard: (req, res) => {
+    viewDashboard: async (req, res) => {
         try {
+            const achievement = await Achievement.find();
+            const student = await Student.find();
+            const faculty = await Faculty.find();
+            const major = await Major.find();
+
             res.render('admin/dashboard/view_dashboard', {
                 title: "Mapres UG | Dashboard",
+                achievement,
+                student,
+                faculty,
+                major,
                 user: req.session.user,
             });
         } catch (error) {
@@ -78,15 +88,12 @@ module.exports = {
             const achievement = await Achievement.find()
             .populate({path: 'studentId', select: 'id name'})
             .populate({path: 'facultyId', select: 'id name'})
-            .populate({path: 'majorId', select: 'id name'})
-            .populate({path: 'teamId', select: 'id name'});
+            .populate({path: 'majorId', select: 'id name'});
             const student = await Student.find()
             .populate({path: 'facultyId', select: 'id name'})
-            .populate({path: 'teamId', select: 'id name'})
             .populate({path: 'majorId', select: 'id name'});
             const faculty = await Faculty.find();
             const major = await Major.find();
-            const team = await Team.find();
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status: alertStatus};
@@ -96,7 +103,6 @@ module.exports = {
                 student,
                 faculty,
                 major,
-                team,
                 achievement,
                 action: 'view',
                 user: req.session.user
@@ -159,15 +165,69 @@ module.exports = {
             res.redirect('/admin/achievement');
         }
     },
+
+    downloadAchievement: async (req, res) => {
+        try {
+            const achievements = await Achievement.find()
+            .populate({path: 'studentId', select: 'name'})
+            .populate({path: 'facultyId', select: 'name'})
+            .populate({path: 'majorId', select: 'name'});
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Achievement Gunadarma');
+            const path = "./files";
+
+            worksheet.columns = [
+                {header: 'No',key: 's_no', width:10},
+                {header: 'Student',key: 'studentId', width:10},
+                {header: 'Faculty',key: 'facultyId', width:10},
+                {header: 'Major',key: 'majorId', width:10},
+                {header: 'Event',key: 'event', width:10},
+                {header: 'Participant',key: 'participant', width:10},
+                {header: 'Rank',key: 'rank', width:10},
+                {header: 'Scale',key: 'scale', width:10},
+                {header: 'Type',key: 'type', width:10},
+                {header: 'Creation',key: 'creation', width:10},
+                {header: 'University Qty',key: 'uniQty', width:10},
+                {header: 'Start Date',key: 'startDate', width:10},
+                {header: 'End Date',key: 'endDate', width:10},
+            ];
+            let count = 1;
+            achievements.forEach(achievement => {
+                achievement.s_no = count;
+                worksheet.addRow(achievement);
+                count += 1;
+            });
+
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold:true};
+            });
+
+            try {
+                await workbook.xlsx.writeFile(`${path}/achievement.xlsx`)
+                .then(() => {
+                    req.flash('alertMessage', 'Success Export Table Achievement');
+                    req.flash('alertStatus', 'success');
+                    res.redirect('/admin/achievement');
+                })
+            } catch (error) {
+                res.send({
+                    status: "error",
+                    message: "Something went wrong"
+                })
+            }
+        } catch (error) {
+            req.flash('alertMessage', `${error.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/admin/achievement');            
+        }
+    },
     
     showEditAchievement: async(req, res) => {
         try {
             const { id } = req.params;
             const achievement = await Achievement.findOne({_id: id})        
-            .populate({path: 'studentId', select: 'id name'})
-            .populate({path: 'teamId', select: 'id name'});
+            .populate({path: 'studentId', select: 'id name'});
             const student = await Student.find();
-            const team = await Team.find();
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status: alertStatus};
@@ -176,7 +236,6 @@ module.exports = {
                 alert,
                 achievement,
                 student,
-                team,
                 user: req.session.user,
                 action: 'edit',
             })
@@ -333,6 +392,56 @@ module.exports = {
             req.flash('alertMessage', `${error.message}`);
             req.flash('alertStatus', 'danger');
             res.redirect('/admin/student')    
+        }
+    },
+
+    downloadStudent: async (req, res) => {
+        try {
+            const students = await Student.find()
+            .populate({path: 'facultyId', select: 'name'})
+            .populate({path: 'majorId', select: 'name'});
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('student Gunadarma');
+            const path = "./files";
+
+            worksheet.columns = [
+                {header: 'No',key: 's_no', width:10},
+                {header: 'Faculty',key: 'facultyId', width:10},
+                {header: 'Major',key: 'majorId', width:10},
+                {header: 'Student',key: 'name', width:10},
+                {header: 'NPM',key: 'npm', width:10},
+                {header: 'Email',key: 'email', width:10},
+                {header: 'Telp',key: 'telp', width:10},
+                {header: 'Year Start',key: 'yearStart', width:10},
+            ];
+            let count = 1;
+            students.forEach(student => {
+                student.s_no = count;
+                worksheet.addRow(student);
+                count += 1;
+            });
+
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold:true};
+            });
+
+            try {
+                await workbook.xlsx.writeFile(`${path}/student.xlsx`)
+                .then(() => {
+                    req.flash('alertMessage', 'Success Export Table Student');
+                    req.flash('alertStatus', 'success');
+                    res.redirect('/admin/student');
+                })
+            } catch (error) {
+                res.send({
+                    status: "error",
+                    message: "Something went wrong"
+                })
+            }
+        } catch (error) {
+            req.flash('alertMessage', `${error.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/admin/student');            
         }
     },
     

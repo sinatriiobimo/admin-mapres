@@ -1,6 +1,9 @@
 <div class="tab-pane fade show active" id="show-achievement" role="tabpanel" aria-labelledby="home-tab">
     <div class="card shadow mb-4">
         <div class="card-body">
+            <a style="text-decoration: none; color: white; margin-bottom: 20px;" href="/admin/achievement/server" class="btn btn-primary btn-sm">
+                Download Table
+            </a>
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -11,7 +14,6 @@
                             <th>Peringkat</th>
                             <th>Kompetisi</th>
                             <th>Karya</th>
-                            <th>Negara Qty</th>
                             <th>Universitas Qty</th>
                             <th>Tanggal Mulai</th>
                             <th>Tanggal Berakhir</th>
@@ -28,7 +30,6 @@
                                 <td><%= achievement[i].rank %></td>
                                 <td><%= achievement[i].event %></td>
                                 <td><%= achievement[i].creation %></td>
-                                <td><%= achievement[i].countryQty %></td>
                                 <td><%= achievement[i].uniQty %></td>
                                 <td><%= achievement[i].startDate.toLocaleString('default', { month: 'short' }) %> <%= achievement[i].startDate.getUTCFullYear() %></td>
                                 <td><%= achievement[i].endDate.toLocaleString('default', { month: 'short' }) %> <%= achievement[i].endDate.getUTCFullYear() %></td>

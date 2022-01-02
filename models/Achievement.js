@@ -27,10 +27,6 @@ const achievementSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    countryQty: {
-        type: String,
-        default: '0'
-    },
     uniQty: {
         type: String,
         required: true,
@@ -68,10 +64,6 @@ const achievementSchema = new mongoose.Schema({
     majorId: {
         type: ObjectId,
         ref: 'Major'
-    },
-    teamId: {
-        type: ObjectId,
-        ref: 'Team'
     },
     createdAt: {
         type: Date,

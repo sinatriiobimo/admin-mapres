@@ -11,12 +11,14 @@ router.get('/logout', adminController.actionLogout);
 router.get('/dashboard', adminController.viewDashboard);
 
 router.get('/achievement', adminController.viewAchievement);
+router.get('/achievement/server', adminController.downloadAchievement);
 router.post('/achievement', uploadDocument, adminController.addAchievement);
 router.get('/achievement/:id', adminController.showEditAchievement);
 router.put('/achievement/:id', uploadDocument, adminController.editAchievement);
 router.delete('/achievement/:id/delete', adminController.deleteAchievement);
 
 router.get('/student', adminController.viewStudent);
+router.get('/student/server', adminController.downloadStudent);
 router.post('/student', uploadSingle, adminController.addStudent);
 router.get('/student/:id', adminController.showEditStudent);
 router.put('/student/:id', uploadSingle, adminController.editStudent);
