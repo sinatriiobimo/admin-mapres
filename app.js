@@ -8,7 +8,7 @@ var session = require('express-session');
 var flash = require('connect-flash');
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/db_mapres', {
+mongoose.connect('mongodb+srv://teamone:cimanggis123@cluster0.dsyf4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -16,6 +16,7 @@ mongoose.connect('mongodb://localhost:27017/db_mapres', {
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
+var apiRouter = require('./routes/api');
 
 var app = express();
 
@@ -40,6 +41,7 @@ app.use('/sb-admin-2', express.static(path.join(__dirname, 'node_modules/startbo
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
+app.use('/api/v1/user', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

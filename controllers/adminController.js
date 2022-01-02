@@ -2,7 +2,6 @@ const Student = require('../models/Student');
 const Major = require('../models/Major');
 const Faculty = require('../models/Faculty');
 const Achievement = require('../models/Achievement');
-const Team = require('../models/Team');
 const Distinguish = require('../models/Distinguish');
 const Image = require('../models/Image');
 const News = require('../models/News');
@@ -117,27 +116,23 @@ module.exports = {
                 res.redirect(`/admin/achievement`);
             }
             
-            const {studentId, facultyId, majorId, teamId, event, participant, scale, type, creation, countryQty, uniQty, rank, startDate, endDate, document, newsURL} = req.body;
-            const student = await Student.findOne({id: studentId})
+            const {studentId, facultyId, majorId, event, participant, scale, type, creation, uniQty, rank, startDate, endDate, document, newsURL} = req.body;
+            const student = await Student.findOne({_id: studentId})
             .populate({path: 'facultyId', select: 'id name'})
-            .populate({path: 'teamId', select: 'id name'})
             .populate({path: 'majorId', select: 'id name'});
             
-            const faculty = await Faculty.findOne({id: facultyId});
-            const major = await Major.findOne({id: majorId});
-            const team = await Team.findOne({id: teamId});
+            const faculty = await Faculty.findOne({_id: facultyId});
+            const major = await Major.findOne({_id: majorId});
             
             const newAchievement = {
                 studentId: student._id,
                 facultyId: faculty._id,
                 majorId: major._id,
-                teamId: team._id,
                 event,
                 participant,
                 scale,
                 type,
                 creation,
-                countryQty,
                 uniQty,
                 rank,
                 startDate,
@@ -154,8 +149,6 @@ module.exports = {
             await faculty.save();
             major.achievementId.push({_id: achievement._id});
             await major.save();
-            team.achievementId.push({_id: achievement._id});
-            await team.save();
             
             req.flash('alertMessage', 'Success Add New achievement');
             req.flash('alertStatus', 'success');
@@ -197,21 +190,19 @@ module.exports = {
     editAchievement: async (req, res) => {
         try {
             const { id } = req.params;
-            const { studentId, facultyId, majorId, teamId, event, participant, scale, type, creation, countryQty, uniQty, rank, newsURL } = req.body;
+            const { studentId, facultyId, majorId, event, participant, scale, type, creation, uniQty, rank, newsURL } = req.body;
             const achievement = await Achievement.findOne({_id: id});
             
             if(req.file === undefined) {
                 achievement.studentId = studentId;
                 achievement.facultyId = facultyId;
                 achievement.majorId = majorId;
-                achievement.teamId = teamId;
                 achievement.event = event;
                 achievement.participant = participant;
                 achievement.scale = scale;
                 achievement.type = type;
                 achievement.type = type;
                 achievement.creation = creation;
-                achievement.countryQty = countryQty;
                 achievement.uniQty = uniQty;
                 achievement.rank = rank;
                 achievement.newsURL = newsURL;
@@ -224,14 +215,12 @@ module.exports = {
                 achievement.studentId = studentId;
                 achievement.facultyId = facultyId;
                 achievement.majorId = majorId;
-                achievement.teamId = teamId;
                 achievement.event = event;
                 achievement.participant = participant;
                 achievement.scale = scale;
                 achievement.type = type;
                 achievement.type = type;
                 achievement.creation = creation;
-                achievement.countryQty = countryQty;
                 achievement.uniQty = uniQty;
                 achievement.rank = rank;
                 achievement.newsURL = newsURL;
@@ -256,7 +245,7 @@ module.exports = {
             const student = await Student.findOne({ _id: achievement.studentId }).populate('achievementId');
             const faculty = await Faculty.findOne({ _id: achievement.facultyId }).populate('achievementId');
             const major = await Major.findOne({ _id: achievement.majorId }).populate('achievementId');
-            const team = await Team.findOne({ _id: achievement.teamId }).populate('achievementId');
+
             for(let i = 0; i < student.achievementId.length; i++) {
                 if(student.achievementId[i]._id.toString() === achievement._id.toString()) {
                     student.achievementId.pull({ _id: achievement._id });
@@ -275,12 +264,7 @@ module.exports = {
                     await major.save();
                 }
             }
-            for(let i = 0; i < team.achievementId.length; i++) {
-                if(team.achievementId[i]._id.toString() === achievement._id.toString()) {
-                    team.achievementId.pull({ _id: achievement._id });
-                    await team.save();
-                }
-            }
+
             await achievement.remove();
             req.flash('alertMessage', 'Success Delete achievement');
             req.flash('alertStatus', 'success');
@@ -919,63 +903,6 @@ module.exports = {
             req.flash('alertStatus', 'danger');
             res.redirect('/admin/distinguish');
         }
-    },
-    
-    // Team
-    viewTeam: async (req, res) => {
-        try {
-            const team = await Team.find();
-            const alertMessage = req.flash('alertMessage');
-            const alertStatus = req.flash('alertStatus');
-            const alert = {message: alertMessage, status: alertStatus};
-            res.render('admin/team/view_team', {
-                title: "Mapres UG | Beranda Team",
-                alert,
-                team,
-                user: req.session.user,
-                action: 'view',
-            })
-        } catch (error) {
-            req.flash('alertMessage', `${error.message}`);
-            req.flash('alertStatus', 'danger');
-            res.redirect('/admin/team');   
-        }
-    },
-    
-    addTeam: async (req, res) => {
-        try {
-            const { name } = req.body;
-            await Team.create({ name });
-            req.flash('alertMessage', 'Success Add New Team');
-            req.flash('alertStatus', 'success');
-            res.redirect('/admin/team');
-        } catch (error) {
-            res.redirect('/admin/team');
-            req.flash('alertMessage', `$error.message`);
-            req.flash('alertStatus', 'danger');
-        }
-    },
-    
-    editTeam: async (req, res) => {
-        try {
-            const { id, name } = req.body;
-            const team = await Team.findOne({_id: id})
-            team.name = name;
-            await team.save();
-            req.flash('alertMessage', 'Success Update team');
-            req.flash('alertStatus', 'success');
-            res.redirect('/admin/team');
-        } catch (error) {
-            req.flash('alertMessage', `$error.message`);
-            req.flash('alertStatus', 'danger');
-            res.redirect('/admin/team');
-        }
-    },
-    
-    deleteTeam: async (req, res) => {
-        const { id } = req.params;
-        const team = await Team.findOne({_id: id});
-        await team.remove();
-        res.redirect('/admin/team');
     }
+    
 }

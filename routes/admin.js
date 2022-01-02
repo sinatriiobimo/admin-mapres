@@ -46,9 +46,4 @@ router.get('/distinguish/:id', adminController.showEditDistinguish);
 router.put('/distinguish/:id', adminController.editDistinguish);
 router.delete('/distinguish/:id/delete', adminController.deleteDistinguish);
 
-router.get('/team', adminController.viewTeam);
-router.post('/team', adminController.addTeam);
-router.put('/team', adminController.editTeam);
-router.delete('/team/:id', adminController.deleteTeam);
-
 module.exports = router;
