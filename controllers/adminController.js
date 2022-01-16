@@ -11,6 +11,7 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const flatten = require('flat');
 const ExcelJS = require('exceljs');
+const PDFDocument = require('pdfkit');
 
 module.exports = {
     viewDashboard: async (req, res) => {

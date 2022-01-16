@@ -32,7 +32,10 @@ module.exports = {
             res.status(200).json({
                 hero: {
                     students: student.length,
-                    achievements: achievement.length
+                    studentic: 5878,
+                    achievements: achievement.length,
+                    achievetic: 24738,
+                    rank: '26'
                 },
                 news,
                 faculty,
@@ -61,9 +64,13 @@ module.exports = {
             .limit(3)
             .populate({
                 path: 'studentId',
-                select: '_id name',
+                select: '_id name image',
                 match: {
-                    distinguishId: {$ne: []}
+                    distinguishId: {
+                        $exists: true, 
+                        $type: 'array',
+                        $ne: []
+                    }
                 },
                 populate: {
                     path: 'distinguishId',
@@ -80,7 +87,10 @@ module.exports = {
             res.status(200).json({
                 hero: {
                     achievements: achievement.length,
-                    students: student.length
+                    achievetic: 1072,
+                    studentic: 860,
+                    students: student.length,
+                    acreditate: 'A'
                 },
                 ...faculty._doc,
                 distinguish
@@ -158,7 +168,7 @@ module.exports = {
 
     newsPage: async (req, res) => {
         try {
-            const news = await News.find().select('_id topic headline');    
+            const news = await News.find().select('_id topic headline image');    
 
             res.status(200).json({
                 news
@@ -174,7 +184,7 @@ module.exports = {
             const { id } = req.params;
             
             const news = await News.findOne({_id: id})
-            .select('_id topic headline about')
+            .select('_id topic headline about image')
 
             res.status(200).json({news});
 
