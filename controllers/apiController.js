@@ -122,7 +122,7 @@ module.exports = {
             const { id } = req.params;
 
             const achievement = await Achievement.find({facultyId: id, type: 'Akademik'})
-            .populate({path: 'achievementId', populate: {path: 'studentId', select: 'name npm'}});
+            .populate({path: 'studentId', select: 'name npm'});
 
             res.status(200).json({
                 achievement
@@ -140,7 +140,7 @@ module.exports = {
             const { id } = req.params;
 
             const nonAchievement = await Achievement.find({facultyId: id, type: 'NonAkademik'})
-            .populate({path: 'achievementId',  populate: {path: 'studentId', select: 'name npm'}});
+            .populate({path: 'studentId', select: 'name npm'});
 
             res.status(200).json({
                 nonAchievement
