@@ -21,12 +21,6 @@ var apiRouter = require('./routes/api');
 
 var app = express();
 
-app.all('/*', (res, req, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-})
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -45,7 +39,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/sb-admin-2', express.static(path.join(__dirname, 'node_modules/startbootstrap-sb-admin-2')));
 
-app.use(cors({credentials: true, origin: true}));
+app.use(cors({
+  credentials: true, 
+  origin: 'https://admin-mapres.herokuapp.com'
+}));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
