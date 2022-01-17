@@ -121,7 +121,8 @@ module.exports = {
 
             const { id } = req.params;
 
-            const achievement = await Achievement.find({facultyId: id, type: 'Akademik'});
+            const achievement = await Achievement.find({facultyId: id, type: 'Akademik'})
+            .populate({path: 'achievementId', populate: {path: 'studentId', select: 'name npm'}});
 
             res.status(200).json({
                 achievement
@@ -138,7 +139,8 @@ module.exports = {
 
             const { id } = req.params;
 
-            const nonAchievement = await Achievement.find({facultyId: id, type: 'NonAkademik'});
+            const nonAchievement = await Achievement.find({facultyId: id, type: 'NonAkademik'})
+            .populate({path: 'achievementId',  populate: {path: 'studentId', select: 'name npm'}});
 
             res.status(200).json({
                 nonAchievement
@@ -153,10 +155,10 @@ module.exports = {
     majorTable: async (req, res) => {
         try {
             const { id } = req.params;
-
+            
             const major = await Major.findOne({_id: id})
             .select('achievementId')
-            .populate({path: 'achievementId'});
+            .populate({path: 'achievementId', populate: {path: 'studentId', select: 'name npm'}});
 
             res.status(200).json({major});
 
