@@ -39,7 +39,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/sb-admin-2', express.static(path.join(__dirname, 'node_modules/startbootstrap-sb-admin-2')));
 
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: 'https://admin-mapres.herokuapp.com/',
+  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar']
+}));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
