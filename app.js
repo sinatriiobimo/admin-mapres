@@ -6,6 +6,7 @@ var logger = require('morgan');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var flash = require('connect-flash');
+const cors = require('cors');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://teamone:cimanggis123@cluster0.dsyf4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
@@ -38,6 +39,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/sb-admin-2', express.static(path.join(__dirname, 'node_modules/startbootstrap-sb-admin-2')));
 
+app.use(cors());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
