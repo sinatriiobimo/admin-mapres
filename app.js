@@ -39,10 +39,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/sb-admin-2', express.static(path.join(__dirname, 'node_modules/startbootstrap-sb-admin-2')));
 
-app.use(cors({
-  credentials: true,
-  headers: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-}));
+app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
