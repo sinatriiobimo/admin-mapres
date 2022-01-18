@@ -41,8 +41,7 @@ app.use('/sb-admin-2', express.static(path.join(__dirname, 'node_modules/startbo
 
 app.use(cors({
   credentials: true,
-  origin: 'https://admin-mapres.herokuapp.com/',
-  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar']
+  origin: 'https://admin-mapres.herokuapp.com'
 }));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
